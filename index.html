@@ -725,8 +725,8 @@
           <div class="eq-bar" style="height:28px"></div>
         </div>
 
-        <p style="font-size:13px;color:#1DB95488;text-align:center;margin-top:10px;font-family:'VT323',monospace;">
-          ▶ via Spotify API on Vercel
+        <p id="npSource" style="font-size:13px;color:#1DB95488;text-align:center;margin-top:10px;font-family:'VT323',monospace;">
+          ▶ demo mode
         </p>
       </div><!-- /.jukebox-block -->
 
@@ -798,8 +798,16 @@
   <!-- ══════════════════════════════════════════════════════ SCRIPTS -->
   <script>
     /* ── Spotify Now Playing (Vercel proxy placeholder) ──────────────
-       Replace VERCEL_URL with your deployed endpoint that returns:
-       { song, artist, album, isPlaying, progress, duration }
+       Replace VERCEL_URL with your deployed endpoint that returns a
+       JSON object with the following shape:
+         {
+           song:      string,   // track title
+           artist:    string,   // artist name
+           album:     string,   // album / release name
+           isPlaying: boolean,  // true while actively playing
+           progress:  number,   // elapsed ms (optional)
+           duration:  number    // total ms   (optional)
+         }
        ────────────────────────────────────────────────────────────── */
     const VERCEL_URL = null; // e.g. 'https://your-app.vercel.app/api/now-playing'
 
@@ -839,17 +847,20 @@
     }
 
     async function fetchNowPlaying() {
+      const sourceEl = document.getElementById('npSource');
       if (VERCEL_URL) {
         try {
           const res = await fetch(VERCEL_URL);
           if (res.ok) {
             const data = await res.json();
             updateNowPlaying(data);
+            if (sourceEl) sourceEl.textContent = '▶ via Spotify API on Vercel';
             return;
           }
-        } catch (_) { /* fall through to placeholder */ }
+        } catch (err) { console.warn('[Spotify] fetch failed, using placeholder:', err); }
       }
       // Cycle through placeholder tracks every 8s
+      if (sourceEl) sourceEl.textContent = '▶ demo mode';
       updateNowPlaying(PLACEHOLDER_TRACKS[trackIdx]);
       trackIdx = (trackIdx + 1) % PLACEHOLDER_TRACKS.length;
     }

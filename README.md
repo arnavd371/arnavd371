@@ -1,147 +1,879 @@
-<div align="center">
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>arnavd371 — Minecraft Profile</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=VT323:wght@400&display=swap" rel="stylesheet" />
+  <style>
+    /* ─── Reset & Base ─────────────────────────────────────────────── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { image-rendering: pixelated; }
 
-# 👋 Hey, I'm Arnav Dhiman
+    body {
+      background-color: #1a1a2e;
+      color: #55FF55;
+      font-family: 'VT323', monospace;
+      font-size: 20px;
+      min-height: 100vh;
+      padding: 32px 24px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 32px;
+    }
 
-### 🧠 Student Researcher · ⚡ Algorithm Enthusiast · 🚀 Builder
+    /* ─── Typography ────────────────────────────────────────────────── */
+    h1, h2, h3 {
+      font-family: 'Press Start 2P', monospace;
+      letter-spacing: 0.05em;
+      text-rendering: optimizeSpeed;
+    }
 
-[![LinkedIn](https://img.shields.io/badge/LinkedIn-0A66C2?style=for-the-badge&logo=linkedin&logoColor=white)](https://linkedin.com/in/arnavd371)
-[![GitHub](https://img.shields.io/badge/GitHub-181717?style=for-the-badge&logo=github&logoColor=white)](https://github.com/arnavd371)
-[![Portfolio](https://img.shields.io/badge/Portfolio-FF6B6B?style=for-the-badge&logo=vercel&logoColor=white)](https://arnavdportfolio.vercel.app)
-[![Email](https://img.shields.io/badge/Email-EA4335?style=for-the-badge&logo=gmail&logoColor=white)](mailto:arnavd371@gmail.com)
+    /* ─── Minecraft Bevel Border Mixin ──────────────────────────────── */
+    .mc-border {
+      border: 3px solid #000;
+      box-shadow:
+        inset  3px  3px 0 #fff3,   /* top-left highlight */
+        inset -3px -3px 0 #0008;   /* bottom-right shadow */
+      image-rendering: pixelated;
+    }
 
-</div>
+    /* outer raised bevel (looks like inventory frame) */
+    .mc-raised {
+      border: 4px solid transparent;
+      border-top-color:    #fff5;
+      border-left-color:   #fff3;
+      border-right-color:  #0006;
+      border-bottom-color: #0009;
+    }
 
----
+    /* ─── Page Header ───────────────────────────────────────────────── */
+    .page-header {
+      text-align: center;
+    }
+    .page-header h1 {
+      font-size: clamp(10px, 2.2vw, 18px);
+      color: #FFAA00;
+      text-shadow: 3px 3px 0 #7a5000, 0 0 20px #FFAA0088;
+      margin-bottom: 10px;
+    }
+    .page-header p {
+      font-size: 22px;
+      color: #aaffaa;
+      letter-spacing: 0.04em;
+    }
 
-## About Me
+    /* ─── Two-column layout ─────────────────────────────────────────── */
+    .main-row {
+      display: flex;
+      gap: 28px;
+      width: 100%;
+      max-width: 1060px;
+      align-items: flex-start;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
 
-> *"Understanding the fundamental limits of computation — one algorithm at a time."*
+    /* ─── Inventory Panel ───────────────────────────────────────────── */
+    .inventory-panel {
+      background: #8b8b8b;
+      flex: 1 1 580px;
+      padding: 20px;
+      position: relative;
+      border: 4px solid #000;
+      box-shadow:
+        inset  4px  4px 0 #ffffffaa,
+        inset -4px -4px 0 #00000088,
+         6px  6px 0 #000;
+    }
 
-I am a student researcher from Navi Mumbai, India with a deep interest in **theoretical computer science**, **optimisation theory**, and **computational complexity**. My work sits at the intersection of mathematics, machine learning, and algorithmic design.
+    .inventory-panel::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: repeating-linear-gradient(
+        90deg, #00000008 0px, #00000008 1px, transparent 1px, transparent 8px
+      ),
+      repeating-linear-gradient(
+        0deg, #00000008 0px, #00000008 1px, transparent 1px, transparent 8px
+      );
+      pointer-events: none;
+    }
 
-- 🔬 Introduced **Saddle Escape Efficiency** — a novel metric for analysing learning rate behaviour in non-convex optimisation
-- 🌏 Representing **Team India** at the **International Conference for Young Scientists (ICYS) 2026**
-- 🏆 **INSEF National Gold Awardee** | **USACO Gold** | **Genius Olympiad Finalist**
-- 🛠️ Co-Founder of **Aethra** — delivered $30,000+ in prizes across 6+ hackathons, all 100% free
-- 📚 Currently exploring: Quantum Computing, Randomized Algorithms & Complexity Theory
+    .inventory-panel .panel-title {
+      font-size: clamp(8px, 1.6vw, 13px);
+      color: #3d3d3d;
+      font-family: 'Press Start 2P', monospace;
+      margin-bottom: 16px;
+      text-shadow: 1px 1px 0 #ffffff55;
+      text-align: center;
+      letter-spacing: 0.1em;
+    }
 
----
+    /* category label */
+    .cat-label {
+      font-family: 'Press Start 2P', monospace;
+      font-size: 7px;
+      color: #2a2a2a;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      margin: 14px 0 8px;
+      padding-left: 2px;
+    }
 
-## 🧪 Research & Publications
+    /* slot grid */
+    .slot-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(82px, 1fr));
+      gap: 6px;
+    }
 
-| 📄 Paper | 🏛️ Venue | 📅 Year |
-|----------|----------|--------|
-| 🔥 **Saddle Escape Efficiency: A Novel Metric for Non-Convex Optimization** | ICCAI (12th Int'l Conference on Computing & AI) | 2025 |
-| 🧬 **Multimodal Deep Learning for Breast Cancer Subtype Classification** | Zenodo | 2025 |
-| 🔢 **Analyzing the Riemann Hypothesis via Zeta Functions & Random Matrix Theory** | One Young India | 2025 |
+    /* single inventory slot */
+    .slot {
+      background: #8f8f8f;
+      border: 3px solid transparent;
+      border-top-color:    #3e3e3e;
+      border-left-color:   #3e3e3e;
+      border-right-color:  #e0e0e0;
+      border-bottom-color: #e0e0e0;
+      width: 82px;
+      height: 82px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 3px;
+      cursor: default;
+      position: relative;
+      transition: filter 0.1s;
+    }
 
----
+    .slot:hover {
+      filter: brightness(1.35);
+      z-index: 2;
+    }
 
-## 🚀 Featured Projects
+    .slot:hover::after {
+      content: attr(data-name);
+      position: absolute;
+      bottom: calc(100% + 6px);
+      left: 50%;
+      transform: translateX(-50%);
+      background: #100010ee;
+      color: #fff;
+      font-family: 'VT323', monospace;
+      font-size: 18px;
+      padding: 4px 8px;
+      white-space: nowrap;
+      border: 2px solid #5a005a;
+      pointer-events: none;
+      z-index: 10;
+    }
 
-<details>
-<summary>⚗️ <b>Saddle Escape Efficiency – Non-Convex Optimization Metric</b></summary>
-<br>
-Proposed and benchmarked a novel metric evaluating learning rate effectiveness in escaping saddle points across non-convex landscapes (Rosenbrock, Himmelblau, etc.). Presented at INSEF and accepted to ICCAI.
-</details>
+    .slot-icon {
+      font-size: 28px;
+      line-height: 1;
+      image-rendering: pixelated;
+    }
 
-<details>
-<summary>⚛️ <b>Barren Plateaus in Parameterized Quantum Circuits (PQCs)</b></summary>
-<br>
-Theoretical and experimental analysis of optimisation challenges in PQCs under varying initialization and depth settings. Explored mitigation via structured ansatze.
-</details>
+    .slot-name {
+      font-family: 'VT323', monospace;
+      font-size: 14px;
+      color: #fff;
+      text-align: center;
+      line-height: 1.1;
+      padding: 0 3px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      max-width: 76px;
+    }
 
-<details>
-<summary>🛡️ <b>Fractal-Inspired Radiation Shields</b></summary>
-<br>
-Designed and simulated layered and fractal-geometry radiation shielding structures for electronic components, evaluating efficiency vs. attenuation trade-offs.
-</details>
+    .slot-label {
+      font-family: 'Press Start 2P', monospace;
+      font-size: 5px;
+      color: #FFAA00;
+      text-align: center;
+      padding: 0 2px;
+    }
 
-<details>
-<summary>📰 <b>Fake News Classification via Hybrid Sentiment Analysis</b></summary>
-<br>
-Built NLP pipelines combining sentiment features with ML classifiers for misinformation detection, evaluated on real-world datasets.
-</details>
+    /* hotbar-style bottom strip */
+    .hotbar {
+      display: flex;
+      gap: 6px;
+      margin-top: 18px;
+      padding-top: 14px;
+      border-top: 3px solid;
+      border-top-color: #3e3e3e;
+    }
 
----
+    .hotbar .slot {
+      width: 68px;
+      height: 68px;
+    }
 
-## 🏅 Honours & Awards
+    /* ─── Jukebox Panel ─────────────────────────────────────────────── */
+    .jukebox-panel {
+      flex: 0 0 280px;
+      display: flex;
+      flex-direction: column;
+      gap: 18px;
+    }
 
-```
-🥇  INSEF National Gold Award (Science & Engineering)           Feb 2026
-🌍  Genius Olympiad Finalist — Rochester Institute of Tech      Mar 2026
-🇮🇳  Team India Representative @ ICYS 2026                       Jan 2026
-✨  CREST Gold Award — British Science Association              Jan 2026
-📝  Paper Accepted @ ICCAI                                      Feb 2026
-⚔️  USACO Gold Division                                         Dec 2025
-🎤  Best Presentation — ISB Hyderabad Venture Verse             Oct 2025
-🌱  Most Impactful Team — Harvard Sustainability Summit         Aug 2025
-🎓  Harvard HPAIR Full Scholarship                              Aug 2025
-🥈  Crowdfunding Impact — Ranked #2 in school (30K+ raised)    Dec 2024
-```
+    .jukebox-block {
+      background: #5c3d1e;
+      border: 4px solid #000;
+      box-shadow:
+        inset  4px  4px 0 #c07030aa,
+        inset -4px -4px 0 #00000099,
+         6px  6px 0 #000;
+      padding: 20px 18px;
+      position: relative;
+      overflow: hidden;
+    }
 
----
+    .jukebox-block::before {
+      /* wood grain texture */
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: repeating-linear-gradient(
+        170deg,
+        transparent 0px, transparent 6px,
+        #0000001a 6px, #0000001a 7px
+      );
+      pointer-events: none;
+    }
 
-## 🛠️ Tech Stack
+    .jukebox-block .block-label {
+      font-family: 'Press Start 2P', monospace;
+      font-size: 7px;
+      color: #FFAA00;
+      text-shadow: 1px 1px 0 #000;
+      text-align: center;
+      margin-bottom: 14px;
+      letter-spacing: 0.12em;
+    }
 
-**Languages**
+    /* disc hole in the jukebox */
+    .disc-holder {
+      width: 80px;
+      height: 80px;
+      margin: 0 auto 14px;
+      position: relative;
+    }
 
-![Python](https://img.shields.io/badge/Python-3776AB?style=flat-square&logo=python&logoColor=white)
-![C++](https://img.shields.io/badge/C++-00599C?style=flat-square&logo=cplusplus&logoColor=white)
-![C](https://img.shields.io/badge/C-A8B9CC?style=flat-square&logo=c&logoColor=black)
+    .disc {
+      width: 80px;
+      height: 80px;
+      border-radius: 50%;
+      background: conic-gradient(
+        #111 0deg 20deg, #1DB954 20deg 60deg,
+        #111 60deg 90deg, #0a9e3f 90deg 130deg,
+        #111 130deg 160deg, #1DB954 160deg 200deg,
+        #111 200deg 230deg, #0a9e3f 230deg 270deg,
+        #111 270deg 300deg, #1DB954 300deg 340deg,
+        #111 340deg 360deg
+      );
+      box-shadow: 0 0 12px #1DB95488, 0 0 0 3px #000;
+      animation: spin 3s linear infinite;
+      position: relative;
+    }
 
-**AI / ML / Data Science**
+    .disc-playing .disc { animation-play-state: running; }
+    .disc-paused  .disc { animation-play-state: paused; }
 
-![HuggingFace](https://img.shields.io/badge/HuggingFace-FFD21E?style=flat-square&logo=huggingface&logoColor=black)
-![scikit-learn](https://img.shields.io/badge/Scikit--learn-F7931E?style=flat-square&logo=scikit-learn&logoColor=white)
-![NumPy](https://img.shields.io/badge/NumPy-013243?style=flat-square&logo=numpy&logoColor=white)
-![Pandas](https://img.shields.io/badge/Pandas-150458?style=flat-square&logo=pandas&logoColor=white)
+    @keyframes spin {
+      from { transform: rotate(0deg); }
+      to   { transform: rotate(360deg); }
+    }
 
-**Web & Systems**
+    .disc-center {
+      position: absolute;
+      top: 50%; left: 50%;
+      transform: translate(-50%, -50%);
+      width: 20px; height: 20px;
+      border-radius: 50%;
+      background: #1a1a1a;
+      border: 2px solid #333;
+      z-index: 2;
+    }
 
-![Django](https://img.shields.io/badge/Django-092E20?style=flat-square&logo=django&logoColor=white)
-![Flask](https://img.shields.io/badge/Flask-000000?style=flat-square&logo=flask&logoColor=white)
-![AWS](https://img.shields.io/badge/AWS-232F3E?style=flat-square&logo=amazonaws&logoColor=white)
+    /* Spotify Now Playing card */
+    .now-playing {
+      background: #121212;
+      border: 3px solid #1DB954;
+      box-shadow:
+        inset  3px  3px 0 #1DB95433,
+        inset -3px -3px 0 #00000066,
+        0 0 18px #1DB95455;
+      padding: 14px 12px 12px;
+      position: relative;
+    }
 
-**Tools**
+    .np-badge {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      margin-bottom: 8px;
+    }
+    .np-badge .dot {
+      width: 8px; height: 8px;
+      border-radius: 50%;
+      background: #1DB954;
+      animation: pulse 1.4s ease-in-out infinite;
+    }
+    @keyframes pulse {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50%       { opacity: 0.5; transform: scale(0.8); }
+    }
+    .np-badge span {
+      font-family: 'Press Start 2P', monospace;
+      font-size: 6px;
+      color: #1DB954;
+      letter-spacing: 0.1em;
+    }
 
-![MATLAB](https://img.shields.io/badge/MATLAB-0076A8?style=flat-square&logo=mathworks&logoColor=white)
-![GitHub](https://img.shields.io/badge/GitHub-181717?style=flat-square&logo=github&logoColor=white)
-![LangChain](https://img.shields.io/badge/LangChain-1C3C3C?style=flat-square&logo=langchain&logoColor=white)
+    .np-song {
+      font-family: 'VT323', monospace;
+      font-size: 22px;
+      color: #fff;
+      line-height: 1.1;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .np-artist {
+      font-family: 'VT323', monospace;
+      font-size: 18px;
+      color: #b3b3b3;
+      margin-top: 2px;
+    }
+    .np-album {
+      font-family: 'VT323', monospace;
+      font-size: 15px;
+      color: #555;
+      margin-top: 2px;
+    }
 
----
+    /* progress bar */
+    .np-progress {
+      margin-top: 10px;
+      height: 4px;
+      background: #333;
+      border: 2px solid #000;
+      position: relative;
+      overflow: hidden;
+    }
+    .np-progress-fill {
+      height: 100%;
+      width: 62%;
+      background: #1DB954;
+      animation: progress-anim 90s linear infinite;
+    }
+    @keyframes progress-anim {
+      from { width: 0%; }
+      to   { width: 100%; }
+    }
 
-## 💼 Experience
+    /* ─── Equalizer bars ─────────────────────────────────────────────── */
+    .equalizer {
+      display: flex;
+      align-items: flex-end;
+      justify-content: center;
+      gap: 4px;
+      height: 36px;
+      margin-top: 12px;
+    }
 
-| Organisation | Role | Period |
-|-------------|------|--------|
-| 🚀 **Aethra** | Co-Founder | Aug 2025 – Present |
-| ✈️ **SkyFlux** | Engineering Intern | Feb 2026 – Present |
-| ⚛️ **ThinkingBeyond** | BeyondQuantum Research Student | Feb 2026 – Present |
-| 🔬 **New York Academy of Sciences** | Researcher (Part-time) | Oct 2025 – Present |
-| 🤖 **IIT Bombay** | Autonomous Robotics AI Intern | Dec 2025 – Mar 2026 |
-| 🎓 **Yale Entrepreneurial Society** | Fellow | Oct 2025 – Jan 2026 |
+    .eq-bar {
+      width: 8px;
+      background: #1DB954;
+      border: 1px solid #0a9e3f;
+      image-rendering: pixelated;
+      animation: eq-bounce var(--dur, 0.6s) ease-in-out infinite alternate;
+    }
 
----
+    .eq-bar:nth-child(1)  { --dur: 0.55s; }
+    .eq-bar:nth-child(2)  { --dur: 0.42s; }
+    .eq-bar:nth-child(3)  { --dur: 0.70s; }
+    .eq-bar:nth-child(4)  { --dur: 0.38s; }
+    .eq-bar:nth-child(5)  { --dur: 0.65s; }
+    .eq-bar:nth-child(6)  { --dur: 0.50s; }
+    .eq-bar:nth-child(7)  { --dur: 0.80s; }
+    .eq-bar:nth-child(8)  { --dur: 0.44s; }
+    .eq-bar:nth-child(9)  { --dur: 0.60s; }
+    .eq-bar:nth-child(10) { --dur: 0.35s; }
+    .eq-bar:nth-child(11) { --dur: 0.72s; }
+    .eq-bar:nth-child(12) { --dur: 0.48s; }
 
-## 📊 GitHub Activity
+    @keyframes eq-bounce {
+      from { height: 4px;  opacity: 0.5; }
+      to   { height: 32px; opacity: 1.0; }
+    }
 
-<div align="center">
+    /* ─── Stats Panel ────────────────────────────────────────────────── */
+    .stats-panel {
+      background: #555555;
+      border: 4px solid #000;
+      box-shadow:
+        inset  4px  4px 0 #ffffffaa,
+        inset -4px -4px 0 #00000088,
+         6px  6px 0 #000;
+      padding: 16px 18px;
+      width: 100%;
+      max-width: 1060px;
+    }
 
-<img src="https://github-readme-activity-graph.vercel.app/graph?username=arnavd371&theme=tokyo-night&hide_border=true&area=true" width="100%"/>
+    .stats-panel .panel-title {
+      font-family: 'Press Start 2P', monospace;
+      font-size: 9px;
+      color: #FFAA00;
+      text-shadow: 1px 1px 0 #000;
+      margin-bottom: 14px;
+      text-align: center;
+      letter-spacing: 0.1em;
+    }
 
-</div>
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+      gap: 12px;
+    }
 
----
+    .stat-row {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
 
-## 🌐 Let's Connect
+    .stat-icon { font-size: 22px; }
 
-Open to research collaborations, interesting problems, and conversations at the frontier of algorithms, AI, and mathematics.
+    .stat-info { flex: 1; }
+    .stat-name {
+      font-family: 'VT323', monospace;
+      font-size: 20px;
+      color: #fff;
+    }
+    .stat-bar-wrap {
+      height: 10px;
+      background: #3a3a3a;
+      border: 2px solid #222;
+      margin-top: 3px;
+      position: relative;
+      overflow: hidden;
+    }
+    .stat-bar {
+      height: 100%;
+      background: linear-gradient(90deg, #55FF55, #00cc00);
+      width: var(--pct, 50%);
+      position: relative;
+      transition: width 0.4s ease;
+    }
+    .stat-bar::after {
+      content: '';
+      position: absolute;
+      right: 0; top: 0; bottom: 0;
+      width: 3px;
+      background: #aaffaa;
+    }
 
-📬 **arnavd371@gmail.com** | 🌍 Navi Mumbai, India
+    /* ─── Footer ────────────────────────────────────────────────────── */
+    footer {
+      font-family: 'Press Start 2P', monospace;
+      font-size: 7px;
+      color: #55FF5588;
+      text-align: center;
+      letter-spacing: 0.1em;
+    }
+  </style>
+</head>
+<body>
 
-<div align="center">
+  <!-- ══════════════════════════════════════════════════════ PAGE HEADER -->
+  <header class="page-header">
+    <h1>⚒ ARNAVD371's INVENTORY ⚒</h1>
+    <p>[ Player: arnavd371 &nbsp;|&nbsp; Level: Software Engineer &nbsp;|&nbsp; Mode: Creative ]</p>
+  </header>
 
-![Profile Views](https://komarev.com/ghpvc/?username=arnavd371&color=blueviolet&style=flat-square)
+  <!-- ══════════════════════════════════════════════════════ MAIN ROW -->
+  <div class="main-row">
 
-</div>
+    <!-- ═══════════════════════════════════════ TECH STACK INVENTORY -->
+    <section class="inventory-panel mc-raised" aria-label="Tech Stack Inventory">
+      <div class="panel-title">🎒 TECH STACK INVENTORY</div>
+
+      <!-- Languages -->
+      <div class="cat-label">⚔ Languages</div>
+      <div class="slot-grid">
+        <div class="slot" data-name="Python">
+          <span class="slot-icon">🐍</span>
+          <span class="slot-name">Python</span>
+          <span class="slot-label">LANG</span>
+        </div>
+        <div class="slot" data-name="JavaScript">
+          <span class="slot-icon">🟨</span>
+          <span class="slot-name">JavaScript</span>
+          <span class="slot-label">LANG</span>
+        </div>
+        <div class="slot" data-name="TypeScript">
+          <span class="slot-icon">🔷</span>
+          <span class="slot-name">TypeScript</span>
+          <span class="slot-label">LANG</span>
+        </div>
+        <div class="slot" data-name="Java">
+          <span class="slot-icon">☕</span>
+          <span class="slot-name">Java</span>
+          <span class="slot-label">LANG</span>
+        </div>
+        <div class="slot" data-name="C / C++">
+          <span class="slot-icon">⚙️</span>
+          <span class="slot-name">C / C++</span>
+          <span class="slot-label">LANG</span>
+        </div>
+        <div class="slot" data-name="SQL">
+          <span class="slot-icon">🗄️</span>
+          <span class="slot-name">SQL</span>
+          <span class="slot-label">LANG</span>
+        </div>
+        <div class="slot" data-name="Bash">
+          <span class="slot-icon">🖥️</span>
+          <span class="slot-name">Bash</span>
+          <span class="slot-label">LANG</span>
+        </div>
+      </div>
+
+      <!-- Frontend -->
+      <div class="cat-label">🪄 Frontend</div>
+      <div class="slot-grid">
+        <div class="slot" data-name="React">
+          <span class="slot-icon">⚛️</span>
+          <span class="slot-name">React</span>
+          <span class="slot-label">FRONTEND</span>
+        </div>
+        <div class="slot" data-name="Next.js">
+          <span class="slot-icon">🔺</span>
+          <span class="slot-name">Next.js</span>
+          <span class="slot-label">FRONTEND</span>
+        </div>
+        <div class="slot" data-name="HTML5">
+          <span class="slot-icon">🌐</span>
+          <span class="slot-name">HTML5</span>
+          <span class="slot-label">FRONTEND</span>
+        </div>
+        <div class="slot" data-name="CSS3">
+          <span class="slot-icon">🎨</span>
+          <span class="slot-name">CSS3</span>
+          <span class="slot-label">FRONTEND</span>
+        </div>
+        <div class="slot" data-name="Tailwind">
+          <span class="slot-icon">💨</span>
+          <span class="slot-name">Tailwind</span>
+          <span class="slot-label">FRONTEND</span>
+        </div>
+      </div>
+
+      <!-- Backend -->
+      <div class="cat-label">🔧 Backend</div>
+      <div class="slot-grid">
+        <div class="slot" data-name="Node.js">
+          <span class="slot-icon">🟢</span>
+          <span class="slot-name">Node.js</span>
+          <span class="slot-label">BACKEND</span>
+        </div>
+        <div class="slot" data-name="Express">
+          <span class="slot-icon">🚂</span>
+          <span class="slot-name">Express</span>
+          <span class="slot-label">BACKEND</span>
+        </div>
+        <div class="slot" data-name="FastAPI">
+          <span class="slot-icon">⚡</span>
+          <span class="slot-name">FastAPI</span>
+          <span class="slot-label">BACKEND</span>
+        </div>
+        <div class="slot" data-name="PostgreSQL">
+          <span class="slot-icon">🐘</span>
+          <span class="slot-name">PostgreSQL</span>
+          <span class="slot-label">BACKEND</span>
+        </div>
+        <div class="slot" data-name="MongoDB">
+          <span class="slot-icon">🍃</span>
+          <span class="slot-name">MongoDB</span>
+          <span class="slot-label">BACKEND</span>
+        </div>
+        <div class="slot" data-name="Redis">
+          <span class="slot-icon">🔴</span>
+          <span class="slot-name">Redis</span>
+          <span class="slot-label">BACKEND</span>
+        </div>
+      </div>
+
+      <!-- Tools & DevOps -->
+      <div class="cat-label">🛠 Tools &amp; DevOps</div>
+      <div class="slot-grid">
+        <div class="slot" data-name="Git">
+          <span class="slot-icon">🌿</span>
+          <span class="slot-name">Git</span>
+          <span class="slot-label">TOOLS</span>
+        </div>
+        <div class="slot" data-name="Docker">
+          <span class="slot-icon">🐳</span>
+          <span class="slot-name">Docker</span>
+          <span class="slot-label">DEVOPS</span>
+        </div>
+        <div class="slot" data-name="Kubernetes">
+          <span class="slot-icon">☸️</span>
+          <span class="slot-name">Kubernetes</span>
+          <span class="slot-label">DEVOPS</span>
+        </div>
+        <div class="slot" data-name="AWS">
+          <span class="slot-icon">☁️</span>
+          <span class="slot-name">AWS</span>
+          <span class="slot-label">CLOUD</span>
+        </div>
+        <div class="slot" data-name="GitHub Actions">
+          <span class="slot-icon">🤖</span>
+          <span class="slot-name">GH Actions</span>
+          <span class="slot-label">CI/CD</span>
+        </div>
+        <div class="slot" data-name="Vercel">
+          <span class="slot-icon">▲</span>
+          <span class="slot-name">Vercel</span>
+          <span class="slot-label">DEPLOY</span>
+        </div>
+        <div class="slot" data-name="Linux">
+          <span class="slot-icon">🐧</span>
+          <span class="slot-name">Linux</span>
+          <span class="slot-label">OS</span>
+        </div>
+      </div>
+
+      <!-- Hotbar -->
+      <div class="hotbar">
+        <div class="slot" data-name="VS Code">
+          <span class="slot-icon">💻</span>
+          <span class="slot-name">VS Code</span>
+          <span class="slot-label">EDITOR</span>
+        </div>
+        <div class="slot" data-name="Figma">
+          <span class="slot-icon">🎭</span>
+          <span class="slot-name">Figma</span>
+          <span class="slot-label">DESIGN</span>
+        </div>
+        <div class="slot" data-name="Postman">
+          <span class="slot-icon">📬</span>
+          <span class="slot-name">Postman</span>
+          <span class="slot-label">API</span>
+        </div>
+        <div class="slot" data-name="Jira">
+          <span class="slot-icon">📋</span>
+          <span class="slot-name">Jira</span>
+          <span class="slot-label">PM</span>
+        </div>
+        <div class="slot" data-name="Notion">
+          <span class="slot-icon">📓</span>
+          <span class="slot-name">Notion</span>
+          <span class="slot-label">NOTES</span>
+        </div>
+      </div>
+    </section><!-- /.inventory-panel -->
+
+    <!-- ═══════════════════════════════════════ JUKEBOX COLUMN -->
+    <aside class="jukebox-panel">
+
+      <!-- Jukebox Block -->
+      <div class="jukebox-block disc-playing" id="jukeboxBlock">
+        <div class="block-label">🎵 JUKEBOX</div>
+
+        <div class="disc-holder">
+          <div class="disc" id="disc"></div>
+          <div class="disc-center"></div>
+        </div>
+
+        <!-- Now Playing -->
+        <div class="now-playing">
+          <div class="np-badge">
+            <span class="dot" id="npDot"></span>
+            <span id="npStatus">NOW PLAYING</span>
+          </div>
+
+          <div class="np-song"   id="npSong">Pigstep</div>
+          <div class="np-artist" id="npArtist">Lena Raine</div>
+          <div class="np-album"  id="npAlbum">Minecraft: Nether Update</div>
+
+          <div class="np-progress">
+            <div class="np-progress-fill" id="npProgress"></div>
+          </div>
+        </div>
+
+        <!-- Equalizer -->
+        <div class="equalizer" id="equalizer">
+          <div class="eq-bar" style="height:20px"></div>
+          <div class="eq-bar" style="height:28px"></div>
+          <div class="eq-bar" style="height:14px"></div>
+          <div class="eq-bar" style="height:32px"></div>
+          <div class="eq-bar" style="height:10px"></div>
+          <div class="eq-bar" style="height:26px"></div>
+          <div class="eq-bar" style="height:18px"></div>
+          <div class="eq-bar" style="height:30px"></div>
+          <div class="eq-bar" style="height:12px"></div>
+          <div class="eq-bar" style="height:22px"></div>
+          <div class="eq-bar" style="height:16px"></div>
+          <div class="eq-bar" style="height:28px"></div>
+        </div>
+
+        <p id="npSource" style="font-size:13px;color:#1DB95488;text-align:center;margin-top:10px;font-family:'VT323',monospace;">
+          ▶ demo mode
+        </p>
+      </div><!-- /.jukebox-block -->
+
+    </aside><!-- /.jukebox-panel -->
+  </div><!-- /.main-row -->
+
+  <!-- ══════════════════════════════════════════════════════ STATS BAR -->
+  <section class="stats-panel" aria-label="GitHub Stats">
+    <div class="panel-title">📊 PLAYER STATS</div>
+    <div class="stats-grid">
+
+      <div class="stat-row">
+        <span class="stat-icon">⭐</span>
+        <div class="stat-info">
+          <div class="stat-name">GitHub Stars</div>
+          <div class="stat-bar-wrap"><div class="stat-bar" style="--pct:72%"></div></div>
+        </div>
+      </div>
+
+      <div class="stat-row">
+        <span class="stat-icon">🔀</span>
+        <div class="stat-info">
+          <div class="stat-name">Pull Requests</div>
+          <div class="stat-bar-wrap"><div class="stat-bar" style="--pct:58%"></div></div>
+        </div>
+      </div>
+
+      <div class="stat-row">
+        <span class="stat-icon">🐛</span>
+        <div class="stat-info">
+          <div class="stat-name">Issues Closed</div>
+          <div class="stat-bar-wrap"><div class="stat-bar" style="--pct:85%"></div></div>
+        </div>
+      </div>
+
+      <div class="stat-row">
+        <span class="stat-icon">📦</span>
+        <div class="stat-info">
+          <div class="stat-name">Repositories</div>
+          <div class="stat-bar-wrap"><div class="stat-bar" style="--pct:45%"></div></div>
+        </div>
+      </div>
+
+      <div class="stat-row">
+        <span class="stat-icon">🔥</span>
+        <div class="stat-info">
+          <div class="stat-name">Commit Streak</div>
+          <div class="stat-bar-wrap"><div class="stat-bar" style="--pct:90%"></div></div>
+        </div>
+      </div>
+
+      <div class="stat-row">
+        <span class="stat-icon">💬</span>
+        <div class="stat-info">
+          <div class="stat-name">Code Reviews</div>
+          <div class="stat-bar-wrap"><div class="stat-bar" style="--pct:63%"></div></div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ══════════════════════════════════════════════════════ FOOTER -->
+  <footer>
+    &lt;/&gt; crafted with ❤ in Minecraft Creative Mode &nbsp;|&nbsp;
+    Press [E] to close inventory
+  </footer>
+
+  <!-- ══════════════════════════════════════════════════════ SCRIPTS -->
+  <script>
+    /* ── Spotify Now Playing (Vercel proxy placeholder) ──────────────
+       Replace VERCEL_URL with your deployed endpoint that returns a
+       JSON object with the following shape:
+         {
+           song:      string,   // track title
+           artist:    string,   // artist name
+           album:     string,   // album / release name
+           isPlaying: boolean,  // true while actively playing
+           progress:  number,   // elapsed ms (optional)
+           duration:  number    // total ms   (optional)
+         }
+       ────────────────────────────────────────────────────────────── */
+    const VERCEL_URL = null; // e.g. 'https://your-app.vercel.app/api/now-playing'
+
+    const PLACEHOLDER_TRACKS = [
+      { song: 'Pigstep',        artist: 'Lena Raine',    album: 'MC: Nether Update',   isPlaying: true  },
+      { song: 'Otherside',      artist: 'Lena Raine',    album: 'MC: Caves & Cliffs',  isPlaying: true  },
+      { song: 'Sweden',         artist: 'C418',           album: 'Minecraft Volume Alpha', isPlaying: true },
+      { song: 'Stal',           artist: 'C418',           album: 'Minecraft Volume Beta',  isPlaying: false },
+    ];
+
+    let trackIdx = 0;
+
+    function updateNowPlaying(data) {
+      const { song, artist, album, isPlaying } = data;
+      document.getElementById('npSong').textContent   = song;
+      document.getElementById('npArtist').textContent = artist;
+      document.getElementById('npAlbum').textContent  = album;
+
+      const block = document.getElementById('jukeboxBlock');
+      const dot   = document.getElementById('npDot');
+      const status = document.getElementById('npStatus');
+      const eq    = document.getElementById('equalizer');
+
+      if (isPlaying) {
+        block.classList.add('disc-playing');
+        block.classList.remove('disc-paused');
+        dot.style.animationPlayState = 'running';
+        status.textContent = 'NOW PLAYING';
+        eq.querySelectorAll('.eq-bar').forEach(b => b.style.animationPlayState = 'running');
+      } else {
+        block.classList.add('disc-paused');
+        block.classList.remove('disc-playing');
+        dot.style.animationPlayState = 'paused';
+        status.textContent = 'PAUSED';
+        eq.querySelectorAll('.eq-bar').forEach(b => b.style.animationPlayState = 'paused');
+      }
+    }
+
+    async function fetchNowPlaying() {
+      const sourceEl = document.getElementById('npSource');
+      if (VERCEL_URL) {
+        try {
+          const res = await fetch(VERCEL_URL);
+          if (res.ok) {
+            const data = await res.json();
+            updateNowPlaying(data);
+            if (sourceEl) sourceEl.textContent = '▶ via Spotify API on Vercel';
+            return;
+          }
+        } catch (err) { console.warn('[Spotify] fetch failed, using placeholder:', err); }
+      }
+      // Cycle through placeholder tracks every 8s
+      if (sourceEl) sourceEl.textContent = '▶ demo mode';
+      updateNowPlaying(PLACEHOLDER_TRACKS[trackIdx]);
+      trackIdx = (trackIdx + 1) % PLACEHOLDER_TRACKS.length;
+    }
+
+    fetchNowPlaying();
+    setInterval(fetchNowPlaying, 8000);
+
+    /* ── Slot hover tooltip keyboard fix ────────────────────────────── */
+    document.querySelectorAll('.slot').forEach(slot => {
+      slot.setAttribute('tabindex', '0');
+      slot.setAttribute('aria-label', slot.dataset.name);
+    });
+  </script>
+
+</body>
+</html>

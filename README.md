@@ -1,87 +1,18 @@
 # Arnav Dhiman
 
-Researching intelligence, mathematics, and complex systems.
+I believe the most important problems don't belong to any single 
+field. My research keeps proving it.
 
-Currently exploring machine learning theory, foundation models, optimization, computational biology, and mathematical reasoning.
+Nine research outputs across AI, computational biology, quantum 
+computing, and mathematics. Two published. Two accepted at IEEE. 
+One patent filed. Presented at ICYS 2026 representing Team India, 
+2nd place internationally.
 
----
+I also built Aethra, a global convergence ecosystem where 2,340+ 
+researchers and builders across 30 countries came together to work 
+across disciplines.
 
-## Current Work
+Everything I do is oriented around one idea: the best breakthroughs 
+happen when two fields that never talked to each other finally do.
 
-- Research Intern @ MIT CSAIL
-- Senior Agentic AI Researcher @ AIYGO
-- Engineering Intern @ SkyFlux
-- Researcher @ New York Academy of Sciences
-
----
-
-## Research Interests
-
-- Artificial Intelligence
-- Machine Learning Theory
-- Foundation Models
-- Optimization
-- Computational Biology
-- Mathematical Reasoning
-- Quantum Computing
-- Philosophy of Mind
-- Epistemology
-
----
-
-## Selected Research
-
-### Saddle Escape Efficiency
-A novel metric for benchmarking learning rates in non-convex optimization.
-
-### Breast Cancer Subtype Classification
-Multimodal deep learning using histopathology and biomarker data.
-
-### Single-Cell Foundation Models
-Studying tokenization loss, objective mismatch, and representation collapse.
-
-### Quantum Algorithms & Simulability
-Investigating entanglement entropy scaling and matrix product state approximations.
-
----
-
-## Current Questions
-
-- How do learning systems discover useful representations?
-- Why do foundation models fail in specialized scientific domains?
-- Can mathematical structure improve reasoning in AI systems?
-- What are the limits of scalable intelligence?
-- How can optimization dynamics reveal deeper properties of learning?
-
----
-
-## Programs & Communities
-
-- APEX Maths 2026
-- BeyondQuantum
-- Euler Circle
-- Program in Algorithmic & Combinatorial Thinking
-- Young Asians Fellowship
-- Roote Fellowship
-
----
-
-## Writing
-
-I write about:
-
-- Artificial Intelligence
-- Mathematics
-- Research
-- Learning
-- Philosophy
-- Complex Systems
-
-Website: coming soon.
-
----
-
-## Connect
-
-- arnavd371[at]gmail.com
-- linkedin.com/in/arnav-dhiman
+[Website](https://arnavdhiman.com) · [Aethra](https://aethra.co.in)

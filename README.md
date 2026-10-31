@@ -1,5 +1,5 @@
 <h1 align="center">Arnav Dhiman</h1>
-<p align="center">High school researcher in machine learning, mathematics and biology.<br>Navi Mumbai, India.</p>
+<p align="center">hi, i am arnav. i am a high school senior from mumbai, india.<br>my mission is to advance the world through the concept of interdisciplinary research using artificial intelligence and mathematics.</p>
 
 <div align="center">
 <img src="assets/terminal.svg" width="860" alt="Research: Saddle Escape Efficiency, Metabolic Neural Networks, InterpretableSELFFormer, KAAN. Building: Project Harmony, Aethra, Nodal Data Clusters. Honors: ICYS 2026, INSEF gold, USACO gold, CREST gold, Emergent Ventures.">

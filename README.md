@@ -1,5 +1,8 @@
+<h1 align="center">Arnav Dhiman</h1>
+<p align="center">High school researcher in machine learning, mathematics and biology.<br>Navi Mumbai, India.</p>
+
 <div align="center">
-<img src="assets/terminal.svg" width="860" alt="Arnav Dhiman: high school senior in Navi Mumbai. Research in ML, maths and biology; building Project Harmony and Aethra. ICYS, INSEF, USACO Gold, CREST Gold, Emergent Ventures.">
+<img src="assets/terminal.svg" width="860" alt="Research: Saddle Escape Efficiency, Metabolic Neural Networks, InterpretableSELFFormer, KAAN. Building: Project Harmony, Aethra, Nodal Data Clusters. Honors: ICYS 2026, INSEF gold, USACO gold, CREST gold, Emergent Ventures.">
 <br><br>
 <a href="https://arnavdhiman.com"><img src="assets/website.svg" height="34" alt="arnavdhiman.com"></a>&nbsp;
 <a href="https://www.linkedin.com/in/arnavd371/"><img src="assets/linkedin.svg" height="34" alt="linkedin"></a>&nbsp;

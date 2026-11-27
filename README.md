@@ -1,8 +1,8 @@
 <h1 align="center">Arnav Dhiman</h1>
-<p align="center">hi, i am arnav. i am a high school senior from mumbai, india.</p>
+<p align="center">Welcome to my GitHub. You can find repos of my code here. Thanks!</p>
 
 <div align="center">
-<img src="assets/terminal.svg" width="860" alt="Terminal. Research: Saddle Escape Efficiency, Metabolic Neural Networks, InterpretableSELFFormer, KAAN. Building: Project Harmony, Aethra, Nodal Data Clusters. Honors: ICYS 2026, INSEF gold, USACO gold, CREST gold, Emergent Ventures. The cursor is a blinking Minecraft character named Arnav.">
+<img src="assets/intro.webp" width="100%" alt="Animated intro, narrated by a pixel Arnav: Welcome to my GitHub. You can find repos of my code here. Thanks! How to connect: arnavdhiman.com, arnavd371@gmail.com, linkedin.com/in/arnavd371, github.com/arnavd371, x.com/arnavvvdhiman.">
 <br><br>
 <a href="https://arnavdhiman.com"><img src="assets/website.svg" height="34" alt="arnavdhiman.com"></a>&nbsp;
 <a href="https://www.linkedin.com/in/arnavd371/"><img src="assets/linkedin.svg" height="34" alt="linkedin"></a>&nbsp;

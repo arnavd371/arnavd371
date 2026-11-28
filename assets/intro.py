@@ -4,7 +4,7 @@ import numpy as np
 import json, os
 
 PX = json.load(open(os.path.join(os.path.dirname(os.path.abspath(__file__)), "steve.json")))
-U = 0.085
+U = 0.13
 
 config.background_color = "#000000"
 config.frame_height = 8
@@ -29,17 +29,17 @@ class Me(VGroup):
         return self.arm.get_corner(UL) + RIGHT * 0.5 * U + DOWN * U
 
 
-def bubble(text, me, side=RIGHT, size=32, lift=0.45):
-    t = Tex(text, font_size=size, color=BLACK)
-    box = RoundedRectangle(width=t.width + 0.55, height=t.height + 0.45, corner_radius=0.2,
+def bubble(content, me):
+    """A speech bubble above his head, holding whatever he is saying."""
+    top = me.body.get_top()
+    box = RoundedRectangle(width=content.width + 0.8, height=content.height + 0.65, corner_radius=0.25,
                            stroke_width=0, fill_color=WHITE, fill_opacity=1)
-    head = me.body.get_top() + DOWN * 4 * U
-    box.move_to(head + side * (box.width / 2 + 0.65) + UP * lift)
-    t.move_to(box)
-    edge = box.get_left() if side[0] > 0 else box.get_right()
-    tail = Polygon(head + side * 0.45, edge + UP * 0.14, edge + DOWN * 0.14,
+    box.move_to(top + UP * (0.5 + box.height / 2))
+    content.move_to(box)
+    base = box.get_bottom() + UP * 0.02
+    tail = Polygon(top + UP * 0.1, base + LEFT * 0.25, base + RIGHT * 0.25,
                    stroke_width=0, fill_color=WHITE, fill_opacity=1)
-    return VGroup(tail, box, t)
+    return VGroup(tail, box), content
 
 
 class Intro(Scene):
@@ -53,10 +53,16 @@ class Intro(Scene):
         for a, d in [(2.5, 0.35), (-0.45, 0.18), (0.45, 0.18), (-0.45, 0.18), (0.45, 0.18), (-2.5, 0.35)]:
             self.play(Rotate(me.arm, a, about_point=pivot), run_time=d)
 
-    def say(self, me, text, side=RIGHT, lift=0.45):
-        b = bubble(text, me, side, lift=lift)
-        self.play(GrowFromPoint(b, me.body.get_top()), run_time=0.45)
-        return b
+    def say(self, me, text, hold=1.0, size=48):
+        shell, words = bubble(Tex(text, font_size=size, color=BLACK), me)
+        self.play(GrowFromPoint(shell, me.body.get_top()), run_time=0.35)
+        self.play(Write(words), run_time=min(1.3, 0.3 + 0.035 * len(text)))
+        if hold:
+            self.wait(hold)
+        return VGroup(shell, words)
+
+    def hush(self, b, me):
+        self.play(FadeOut(b, target_position=me.body.get_top(), scale=0.3), run_time=0.25)
 
     def hop(self, me, to):
         self.play(me.animate.move_to(to), run_time=0.8, path_arc=-1.6 if to[0] > me.get_x() else 1.6)
@@ -105,7 +111,7 @@ class Intro(Scene):
         bits = VGroup()
         for x, y in [(-7.7, 3.7), (-5.2, 3.5), (-5.3, 2.1), (-7.6, 2.0), (-5.1, 0.0), (-7.7, -0.1), (-5.2, -1.1), (-7.5, -1.0),
                      (-4.4, 3.7), (-3.0, 3.6), (3.2, 3.7), (4.6, 3.4), (5.3, 2.5), (7.8, 1.0), (5.3, 1.1), (5.2, -0.0),
-                     (7.8, -1.2), (5.4, -1.2), (4.8, -2.4), (4.4, -3.4), (-4.6, -3.5), (-2.5, -3.6), (0.2, -3.7), (2.4, -3.55),
+                     (7.8, -1.2), (5.4, -1.2), (4.8, -2.4), (4.4, -3.4), (-4.6, -3.5), (-2.5, -3.6), (2.4, -3.55),
                      (-5.4, 3.0), (7.8, -2.2), (5.2, 3.8)]:
             word = "".join(rng.choice(["0", "1"], size=rng.integers(1, 5)))
             col = [BLUE, TEAL, YELLOW, MAROON_B, GREEN][rng.integers(5)]
@@ -140,51 +146,55 @@ class Intro(Scene):
         return UpdateFromAlphaFunc(bits, fall, run_time=2.2, rate_func=linear, remover=True)
 
     def construct(self):
-        me = Me(np.array([-6.5, -2.4, 0]))
+        me = Me(np.array([0, -1.76, 0]))
         art = self.doodles()
 
         # 1. welcome
-        hi = Tex(r"Welcome to my GitHub", font_size=88).move_to(UP * 1.2)
-        line = Line(hi.get_left(), hi.get_right(), color=YELLOW, stroke_width=5).next_to(hi, DOWN, buff=0.14)
-        self.play(FadeIn(me, shift=RIGHT), run_time=0.6)
-        self.play(Write(hi), Create(line), LaggedStart(*[FadeIn(a, scale=0.8) for a in art], lag_ratio=0.12), run_time=2.0)
-        self.play(self.confetti())
-        b = self.say(me, "hi, I'm Arnav")
+        self.play(FadeIn(me, shift=UP), LaggedStart(*[FadeIn(a, scale=0.8) for a in art], lag_ratio=0.12), run_time=1.6)
+        b = self.say(me, "hi, I'm Arnav", hold=0.2)
         self.wave(me)
         self.blink(me)
-        self.wait(0.6)
-        self.play(FadeOut(b), run_time=0.3)
+        self.hush(b, me)
 
-        repos = VGroup(Tex("You can find repos of my code here.", font_size=52),
-                       Tex("Thanks!", font_size=52, color=YELLOW)).arrange(DOWN, buff=0.35).next_to(line, DOWN, buff=0.8)
-        self.play(Write(repos[0]), run_time=1.6)
-        self.play(Write(repos[1]), run_time=0.7)
+        b = self.say(me, "Welcome to my GitHub", hold=0, size=56)
+        self.play(self.confetti())
+        self.hush(b, me)
+
+        b = self.say(me, "You can find repos of my code here.", hold=1.4)
         self.blink(me)
-        self.wait(2.0)
-        self.play(FadeOut(hi, line, repos), run_time=0.6)
+        self.hush(b, me)
+
+        b = self.say(me, "Thanks!", hold=0.9, size=60)
+        self.hush(b, me)
 
         # 2. how to connect
-        title = Tex("How to connect with me", font_size=64).move_to(UP * 2.6)
-        ul = Line(title.get_left(), title.get_right(), color=YELLOW, stroke_width=5).next_to(title, DOWN, buff=0.14)
+        b = self.say(me, "Here's how to connect with me", hold=1.0)
+        self.blink(me)
+        self.hush(b, me)
+
         rows = VGroup()
         for k, (name, where, col) in enumerate([
-            ("Website", "arnavdhiman.com", BLUE),
-            ("Email", "arnavd371@gmail.com", TEAL),
-            ("LinkedIn", "linkedin.com/in/arnavd371", BLUE_B),
-            ("GitHub", "github.com/arnavd371", GREEN),
-            ("X", "x.com/arnavvvdhiman", MAROON_B),
+            ("Website", "arnavdhiman.com", BLUE_E),
+            ("Email", "arnavd371@gmail.com", TEAL_E),
+            ("LinkedIn", "linkedin.com/in/arnavd371", DARK_BLUE),
+            ("GitHub", "github.com/arnavd371", GREEN_E),
+            ("X", "x.com/arnavvvdhiman", MAROON_D),
         ]):
-            y = 1.35 - 0.78 * k
-            label = Tex(r"\textbf{%s}" % name, font_size=42, color=col).move_to([-1.9, y, 0], RIGHT)
-            arrow = Arrow([-1.65, y, 0], [-0.65, y, 0], buff=0, color=col, stroke_width=4, max_tip_length_to_length_ratio=0.22)
-            value = Tex(where, font_size=42).move_to([-0.4, y, 0], LEFT)
-            rows.add(VGroup(label, arrow, value))
-        self.play(Write(title), Create(ul), run_time=1.2)
+            y = -0.5 * k
+            label = Tex(r"\textbf{%s}" % name, font_size=38, color=col).move_to([0, y, 0], RIGHT)
+            value = Tex(where, font_size=38, color=BLACK).move_to([0.35, y, 0], LEFT)
+            rows.add(VGroup(label, value))
+        shell, rows = bubble(rows, me)
+        self.play(GrowFromPoint(shell, me.body.get_top()), run_time=0.35)
         for row in rows:
-            self.play(Write(row[0]), GrowArrow(row[1]), Write(row[2]), run_time=0.8)
-        b = self.say(me, "come say hi", lift=-0.5)
+            self.play(Write(row), run_time=0.7)
+        self.blink(me)
+        self.wait(4.0)
+        self.hush(VGroup(shell, rows), me)
+
+        b = self.say(me, "come say hi", hold=0, size=56)
         self.play(self.confetti(130, seed=3))
         self.wave(me)
         self.blink(me)
-        self.wait(2.5)
-        self.play(FadeOut(title, ul, rows, b, me, art), run_time=0.8)
+        self.wait(1.0)
+        self.play(FadeOut(b, me, art), run_time=0.8)
